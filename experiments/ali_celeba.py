@@ -62,11 +62,11 @@ def create_model_brick():
     decoder = DeterministicConditional(decoder_mapping, name='decoder')
 
     layers = [
-        conv_brick(2, 1, 64), LeakyRectifier(leak=LEAK),
-        conv_brick(7, 2, 128), bn_brick(), LeakyRectifier(leak=LEAK),
+        conv_brick(5, 2, 64), LeakyRectifier(leak=LEAK),
+        conv_brick(5, 2, 128), bn_brick(), LeakyRectifier(leak=LEAK),
         conv_brick(5, 2, 256), bn_brick(), LeakyRectifier(leak=LEAK),
-        conv_brick(7, 2, 256), bn_brick(), LeakyRectifier(leak=LEAK),
-        conv_brick(4, 1, 512), bn_brick(), LeakyRectifier(leak=LEAK)]
+        conv_brick(5, 2, 512), bn_brick(), LeakyRectifier(leak=LEAK),]
+        # conv_brick(4, 1, 512), bn_brick(), LeakyRectifier(leak=LEAK)]
     x_discriminator = ConvolutionalSequence(
         layers=layers, num_channels=NUM_CHANNELS, image_size=IMAGE_SIZE,
         use_bias=False, name='x_discriminator')
