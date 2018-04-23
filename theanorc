@@ -1,5 +1,5 @@
 [global]
-device = gpu
+device = cpu
 floatX = float32
 mode = FAST_RUN
 
