@@ -1,0 +1,44 @@
+#!/usr/bin/env python
+import argparse
+import cPickle as pickle
+import sys
+
+from blocks.serialization import dump, load
+
+import experiments.ali_celeba as ali_celeba
+
+sys.setrecursionlimit(10000)
+
+
+def save_params(main_loop_path, param_path):
+    with open(main_loop_path, 'rb') as src:
+        main_loop = load(src)
+    with open(param_path, 'wb') as dst:
+        pickle.dump(main_loop.model.get_parameter_values(), dst,
+                    protocol=pickle.HIGHEST_PROTOCOL)
+
+
+def load_params(main_loop_path, param_path):
+    with open(param_path, 'rb') as src:
+        parameter_values = pickle.load(src)
+    # Currently only for ali_celeba
+    main_loop = ali_celeba.create_main_loop(main_loop_path)
+    main_loop.model.set_parameter_values(parameter_values)
+    with open(main_loop_path, 'wb') as dst:
+        dump(main_loop, dst)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("main_loop_path", type=str,
+                        help="pickled main loop save path.")
+    parser.add_argument("param_path", type=str,
+                        help="parameters save path.")
+    parser.add_argument("--save", action='store_true',
+                        help='save parameters if specified, otherwise load and save new main loop')
+    args = parser.parse_args()
+
+    if args.save:
+        save_params(args.main_loop_path, args.param_path)
+    else:
+        load_params(args.main_loop_path, args.param_path)
